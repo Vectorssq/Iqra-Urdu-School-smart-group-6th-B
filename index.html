@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="ur">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اردو/ہندی وائس چیٹ بوٹ - Urdu/Hindi Voice Chatbot</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1e5799 0%, #207cca 51%, #2989d8 100%);
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 800px;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            margin-top: 20px;
+        }
+        
+        header {
+            background: linear-gradient(to right, #4CAF50, #45a049);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-bottom: 5px solid #388E3C;
+        }
+        
+        h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 18px;
+            opacity: 0.9;
+        }
+        
+        .chat-container {
+            padding: 20px;
+            height: 400px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .message {
+            max-width: 80%;
+            padding: 12px 18px;
+            border-radius: 20px;
+            line-height: 1.5;
+            position: relative;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .user-message {
+            align-self: flex-end;
+            background-color: #e3f2fd;
+            border-bottom-right-radius: 5px;
+            color: #1565C0;
+        }
+        
+        .bot-message {
+            align-self: flex-start;
+            background-color: #f5f5f5;
+            border-bottom-left-radius: 5px;
+            color: #333;
+        }
+        
+        .message-time {
+            font-size: 12px;
+            opacity: 0.7;
+            margin-top: 5px;
+            text-align: right;
+        }
+        
+        .input-area {
+            display: flex;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-top: 1px solid #eee;
+        }
+        
+        #user-input {
+            flex: 1;
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 30px;
+            font-size: 16px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        
+        #user-input:focus {
+            border-color: #4CAF50;
+        }
+        
+        .btn {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            margin-left: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s;
+        }
+        
+        .btn:hover {
+            background-color: #45a049;
+        }
+        
+        .btn:active {
+            transform: scale(0.95);
+        }
+        
+        .voice-btn {
+            background-color: #2196F3;
+        }
+        
+        .voice-btn:hover {
+            background-color: #0b7dda;
+        }
+        
+        .voice-btn.recording {
+            background-color: #f44336;
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(244, 67, 54, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(244, 67, 54, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(244, 67, 54, 0); }
+        }
+        
+        .icon {
+            font-size: 20px;
+        }
+        
+        .instructions {
+            text-align: center;
+            margin-top: 20px;
+            color: white;
+            max-width: 800px;
+            background-color: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 10px;
+        }
+        
+        .instructions h2 {
+            margin-bottom: 10px;
+            font-size: 22px;
+        }
+        
+        .instructions p {
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+        
+        footer {
+            margin-top: 20px;
+            color: white;
+            text-align: center;
+            font-size: 14px;
+            opacity: 0.8;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                border-radius: 10px;
+            }
+            
+            h1 {
+                font-size: 24px;
+            }
+            
+            .chat-container {
+                height: 350px;
+            }
+            
+            .message {
+                max-width: 90%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>اردو/ہندی وائس چیٹ بوٹ</h1>
+            <div class="subtitle">Urdu/Hindi Voice Chatbot for Students</div>
+        </header>
+        
+        <div class="chat-container" id="chat-container">
+            <div class="message bot-message">
+                السلام علیکم! میں آپ کا تعلیمی معاون ہوں۔ آپ اردو یا ہندی میں بول کر یا لکھ کر مجھ سے بات کر سکتے ہیں۔
+                <div class="message-time">ابھی</div>
+            </div>
+        </div>
+        
+        <div class="input-area">
+            <input type="text" id="user-input" placeholder="اپنا پیغام یہاں لکھیں...">
+            <button class="btn" id="send-btn">
+                <span class="icon">➤</span>
+            </button>
+            <button class="btn voice-btn" id="voice-btn">
+                <span class="icon">🎤</span>
+            </button>
+        </div>
+    </div>
+    
+    <div class="instructions">
+        <h2>استعمال کرنے کا طریقہ</h2>
+        <p>1. ٹیکسٹ باکس میں لکھ کر یا مائیکروفون بٹن دبا کر بول کر بات کریں</p>
+        <p>2. بوٹ آپ کے سوالوں کے جواب دے گا اور اردو/ہندی میں بھی بولے گا</p>
+        <p>3. یہ پروجیکٹ مکمل طور پر مفت APIs استعمال کرتا ہے اور آپ کے ڈیٹا کو محفوظ نہیں کرتا</p>
+    </div>
+    
+    <footer>
+        اسکول کے طلباء کے لئے تعلیمی معاون چیٹ بوٹ | تمام حقوق محفوظ ہیں 2023
+    </footer>
+
+    <script>
+        // DOM Elements
+        const chatContainer = document.getElementById('chat-container');
+        const userInput = document.getElementById('user-input');
+        const sendBtn = document.getElementById('send-btn');
+        const voiceBtn = document.getElementById('voice-btn');
+        
+        // Speech Recognition (for voice input)
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        let recognition;
+        
+        if (SpeechRecognition) {
+            recognition = new SpeechRecognition();
+            recognition.continuous = false;
+            recognition.interimResults = false;
+            recognition.lang = 'ur-PK'; // Urdu language code
+            
+            recognition.onstart = function() {
+                voiceBtn.classList.add('recording');
+                addMessage('آپ بول سکتے ہیں...', 'user');
+            };
+            
+            recognition.onresult = function(event) {
+                const transcript = event.results[0][0].transcript;
+                userInput.value = transcript;
+                processUserInput(transcript);
+                voiceBtn.classList.remove('recording');
+            };
+            
+            recognition.onerror = function(event) {
+                console.error('Speech recognition error', event.error);
+                voiceBtn.classList.remove('recording');
+                addMessage('آواز پہچاننے میں مسئلہ ہوا۔ براہ کرم دوبارہ کوشش کریں۔', 'bot');
+            };
+            
+            recognition.onend = function() {
+                voiceBtn.classList.remove('recording');
+            };
+        } else {
+            voiceBtn.disabled = true;
+            voiceBtn.title = 'آپ کے براؤزر میں وائس ریکگنیشن سپورٹ نہیں ہے';
+        }
+        
+        // Event Listeners
+        sendBtn.addEventListener('click', () => {
+            const message = userInput.value.trim();
+            if (message) {
+                processUserInput(message);
+                userInput.value = '';
+            }
+        });
+        
+        userInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                const message = userInput.value.trim();
+                if (message) {
+                    processUserInput(message);
+                    userInput.value = '';
+                }
+            }
+        });
+        
+        voiceBtn.addEventListener('click', () => {
+            if (recognition) {
+                try {
+                    recognition.start();
+                } catch (error) {
+                    console.error('Recognition start error:', error);
+                }
+            }
+        });
+        
+        // Function to add message to chat
+        function addMessage(text, sender) {
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('message');
+            messageDiv.classList.add(sender === 'user' ? 'user-message' : 'bot-message');
+            
+            const time = new Date().toLocaleTimeString('ur-PK', { hour: '2-digit', minute: '2-digit' });
+            
+            messageDiv.innerHTML = `
+                ${text}
+                <div class="message-time">${time}</div>
+            `;
+            
+            chatContainer.appendChild(messageDiv);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+        
+        // Function to process user input and generate bot response
+        function processUserInput(input) {
+            addMessage(input, 'user');
+            
+            // Show typing indicator
+            const typingIndicator = document.createElement('div');
+            typingIndicator.classList.add('message', 'bot-message');
+            typingIndicator.id = 'typing-indicator';
+            typingIndicator.innerHTML = 'لکھ رہا ہوں...';
+            chatContainer.appendChild(typingIndicator);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+            
+            // Simulate API delay
+            setTimeout(() => {
+                document.getElementById('typing-indicator')?.remove();
+                
+                // Generate bot response
+                const response = generateBotResponse(input);
+                addMessage(response.text, 'bot');
+                
+                // Speak the response if text-to-speech is available
+                if (response.shouldSpeak) {
+                    speakText(response.text);
+                }
+            }, 1500);
+        }
+        
+        // Function to generate bot responses
+        function generateBotResponse(input) {
+            const lowerInput = input.toLowerCase();
+            
+            // Greetings
+            if (lowerInput.includes('سلام') || lowerInput.includes('ہیلو') || 
+                lowerInput.includes('ہائے') || lowerInput.includes('نمسکار')) {
+                return {
+                    text: 'وعلیکم السلام! آپ کیسے ہیں؟ آپ کس موضوع کے بارے میں پوچھنا چاہتے ہیں؟',
+                    shouldSpeak: true
+                };
+            }
+            
+            // Math questions
+            if (lowerInput.includes('ریاضی') || lowerInput.includes('میتھ') || 
+                lowerInput.includes('جمع') || lowerInput.includes('تفریق')) {
+                const responses = [
+                    'ریاضی ایک بہت اہم مضمون ہے۔ آپ جمع، تفریق، ضرب اور تقسیم کے بارے میں پوچھ سکتے ہیں۔',
+                    'کیا آپ کو ریاضی کے کسی خاص مسئلے میں مدد چاہیے؟',
+                    'ریاضی سیکھنے کے لئے مشق بہت ضروری ہے۔ روزانہ مسائل حل کریں۔'
+                ];
+                return {
+                    text: responses[Math.floor(Math.random() * responses.length)],
+                    shouldSpeak: true
+                };
+            }
+            
+            // Science questions
+            if (lowerInput.includes('سائنس') || lowerInput.includes('سائنسی') || 
+                lowerInput.includes('سائنسی') || lowerInput.includes('سائنس')) {
+                const responses = [
+                    'سائنس ہمارے ارد گرد کی دنیا کو سمجھنے کا طریقہ ہے۔ فزکس، کیمسٹری اور بائیالوجی اس کے اہم شاخیں ہیں۔',
+                    'سائنس کے تجربات بہت دلچسپ ہوتے ہیں۔ کیا آپ نے کوئی دلچسپ تجربہ کیا ہے؟',
+                    'سائنس کی مدد سے ہم نئی ایجادات کر سکتے ہیں جو انسانیت کی مدد کرتی ہیں۔'
+                ];
+                return {
+                    text: responses[Math.floor(Math.random() * responses.length)],
+                    shouldSpeak: true
+                };
+            }
+            
+            // Urdu/Hindi questions
+            if (lowerInput.includes('اردو') || lowerInput.includes('ہندی') || 
+                lowerInput.includes('زبان') || lowerInput.includes('قواعد')) {
+                const responses = [
+                    'اردو ایک خوبصورت زبان ہے جس کی شاعری اور ادب بہت مشہور ہے۔',
+                    'کیا آپ کو اردو قواعد یا گرامر کے بارے میں کوئی سوال ہے؟',
+                    'زبان سیکھنے کے لئے روزانہ پڑھنا اور لکھنا بہت ضروری ہے۔'
+                ];
+                return {
+                    text: responses[Math.floor(Math.random() * responses.length)],
+                    shouldSpeak: true
+                };
+            }
+            
+            // General knowledge
+            if (lowerInput.includes('جنرل نالج') || lowerInput.includes('عمومی علم') || 
+                lowerInput.includes('دنیا') || lowerInput.includes('معلومات')) {
+                const responses = [
+                    'دنیا کے بارے میں جاننا بہت ضروری ہے۔ آپ تاریخ، جغرافیہ یا موجودہ واقعات کے بارے میں پوچھ سکتے ہیں۔',
+                    'عمومی علم ہمارے ذہن کو وسیع کرتا ہے۔ روزانہ اخبار پڑھنے کی عادت ڈالیں۔',
+                    'کیا آپ کو کسی خاص موضوع کے بارے میں معلومات چاہیے؟'
+                ];
+                return {
+                    text: responses[Math.floor(Math.random() * responses.length)],
+                    shouldSpeak: true
+                };
+            }
+            
+            // Help
+            if (lowerInput.includes('مدد') || lowerInput.includes('ہیلپ') || 
+                lowerInput.includes('سکھاؤ') || lowerInput.includes('سکھا')) {
+                return {
+                    text: 'میں آپ کی تعلیمی مدد کے لئے یہاں ہوں۔ آپ ریاضی، سائنس، اردو، ہندی یا جنرل نالج کے بارے میں پوچھ سکتے ہیں۔',
+                    shouldSpeak: true
+                };
+            }
+            
+            // Default response
+            const defaultResponses = [
+                'میں ابھی سیکھ رہا ہوں۔ براہ کرم ریاضی، سائنس، اردو یا جنرل نالج کے بارے میں پوچھیں۔',
+                'معاف کیجئے، میں آپ کے سوال کا جواب نہیں دے سکتا۔ براہ کرم کسی تعلیمی موضوع کے بارے میں پوچھیں۔',
+                'کیا آپ کسی خاص مضمون کے بارے میں پوچھنا چاہتے ہیں؟'
+            ];
+            return {
+                text: defaultResponses[Math.floor(Math.random() * defaultResponses.length)],
+                shouldSpeak: true
+            };
+        }
+        
+        // Function to speak text using browser's text-to-speech
+        function speakText(text) {
+            if ('speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance(text);
+                
+                // Try to set Urdu/Hindi voice if available
+                const voices = speechSynthesis.getVoices();
+                const urduVoice = voices.find(voice => 
+                    voice.lang.includes('ur') || voice.lang.includes('hi') || 
+                    voice.name.includes('Urdu') || voice.name.includes('Hindi')
+                );
+                
+                if (urduVoice) {
+                    utterance.voice = urduVoice;
+                } else {
+                    // Fallback to any available voice
+                    utterance.lang = 'ur-PK';
+                }
+                
+                utterance.rate = 0.9;
+                utterance.pitch = 1;
+                
+                speechSynthesis.speak(utterance);
+            }
+        }
+        
+        // Initialize voices when they are loaded
+        if ('speechSynthesis' in window) {
+            speechSynthesis.onvoiceschanged = () => {
+                // Voices are loaded
+            };
+        }
+    </script>
+</body>
+</html>
