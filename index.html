@@ -1,19 +1,20 @@
 <!DOCTYPE html>
-<html lang="ur">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>اردو/ہندی وائس چیٹ بوٹ - Urdu/Hindi Voice Chatbot</title>
+    <title>Computer Basics for Kids</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Comic Sans MS', 'Chalkboard SE', cursive;
         }
         
         body {
-            background: linear-gradient(135deg, #1e5799 0%, #207cca 51%, #2989d8 100%);
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
             color: #333;
             min-height: 100vh;
             display: flex;
@@ -30,19 +31,24 @@
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
             overflow: hidden;
             margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            height: 85vh;
         }
         
         header {
-            background: linear-gradient(to right, #4CAF50, #45a049);
+            background: linear-gradient(to right, #FF6B6B, #FF8E53);
             color: white;
             padding: 20px;
             text-align: center;
-            border-bottom: 5px solid #388E3C;
+            border-bottom: 5px solid #FF4757;
+            position: relative;
         }
         
         h1 {
             font-size: 28px;
             margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
         }
         
         .subtitle {
@@ -50,22 +56,37 @@
             opacity: 0.9;
         }
         
+        .robot-icon {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 40px;
+            animation: bounce 2s infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
         .chat-container {
             padding: 20px;
-            height: 400px;
+            flex: 1;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
             gap: 15px;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="%23f0f8ff"/><path d="M20,20 L80,20 L80,80 L20,80 Z" fill="none" stroke="%23e6f2ff" stroke-width="2"/></svg>');
         }
         
         .message {
-            max-width: 80%;
+            max-width: 85%;
             padding: 12px 18px;
             border-radius: 20px;
             line-height: 1.5;
             position: relative;
             animation: fadeIn 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
         
         @keyframes fadeIn {
@@ -75,14 +96,15 @@
         
         .user-message {
             align-self: flex-end;
-            background-color: #e3f2fd;
+            background: linear-gradient(to right, #4facfe 0%, #00f2fe 100%);
+            color: white;
             border-bottom-right-radius: 5px;
-            color: #1565C0;
         }
         
         .bot-message {
             align-self: flex-start;
-            background-color: #f5f5f5;
+            background: white;
+            border: 2px solid #FFD166;
             border-bottom-left-radius: 5px;
             color: #333;
         }
@@ -96,7 +118,7 @@
         
         .input-area {
             display: flex;
-            padding: 20px;
+            padding: 15px;
             background-color: #f9f9f9;
             border-top: 1px solid #eee;
         }
@@ -116,7 +138,7 @@
         }
         
         .btn {
-            background-color: #4CAF50;
+            background: linear-gradient(to right, #42b883, #347474);
             color: white;
             border: none;
             border-radius: 50%;
@@ -127,58 +149,74 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: background-color 0.3s;
+            transition: transform 0.3s;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
         }
         
         .btn:hover {
-            background-color: #45a049;
+            transform: scale(1.05);
         }
         
         .btn:active {
             transform: scale(0.95);
         }
         
-        .voice-btn {
-            background-color: #2196F3;
-        }
-        
-        .voice-btn:hover {
-            background-color: #0b7dda;
-        }
-        
-        .voice-btn.recording {
-            background-color: #f44336;
-            animation: pulse 1.5s infinite;
-        }
-        
-        @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(244, 67, 54, 0.7); }
-            70% { box-shadow: 0 0 0 10px rgba(244, 67, 54, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(244, 67, 54, 0); }
-        }
-        
         .icon {
             font-size: 20px;
         }
         
-        .instructions {
-            text-align: center;
-            margin-top: 20px;
+        .suggestions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            padding: 10px 20px;
+            background-color: #f0f8ff;
+            border-top: 1px solid #e0e0e0;
+        }
+        
+        .suggestion-chip {
+            background: linear-gradient(to right, #FF9A8B, #FF6A88);
             color: white;
-            max-width: 800px;
-            background-color: rgba(0, 0, 0, 0.3);
-            padding: 15px;
-            border-radius: 10px;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: transform 0.2s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
         
-        .instructions h2 {
-            margin-bottom: 10px;
-            font-size: 22px;
+        .suggestion-chip:hover {
+            transform: translateY(-2px);
         }
         
-        .instructions p {
-            margin-bottom: 10px;
-            line-height: 1.6;
+        .typing-indicator {
+            display: inline-block;
+            background: white;
+            padding: 12px 18px;
+            border-radius: 20px;
+            border: 2px solid #FFD166;
+            align-self: flex-start;
+        }
+        
+        .typing-dots {
+            display: flex;
+            gap: 4px;
+        }
+        
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #999;
+            animation: typing 1.4s infinite ease-in-out;
+        }
+        
+        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+        
+        @keyframes typing {
+            0%, 80%, 100% { transform: scale(0.8); opacity: 0.5; }
+            40% { transform: scale(1); opacity: 1; }
         }
         
         footer {
@@ -186,12 +224,13 @@
             color: white;
             text-align: center;
             font-size: 14px;
-            opacity: 0.8;
+            opacity: 0.9;
         }
         
         @media (max-width: 600px) {
             .container {
-                border-radius: 10px;
+                height: 90vh;
+                border-radius: 15px;
             }
             
             h1 {
@@ -199,11 +238,20 @@
             }
             
             .chat-container {
-                height: 350px;
+                padding: 15px;
             }
             
             .message {
                 max-width: 90%;
+            }
+            
+            .suggestions {
+                padding: 8px 15px;
+            }
+            
+            .suggestion-chip {
+                font-size: 12px;
+                padding: 6px 12px;
             }
         }
     </style>
@@ -211,37 +259,37 @@
 <body>
     <div class="container">
         <header>
-            <h1>اردو/ہندی وائس چیٹ بوٹ</h1>
-            <div class="subtitle">Urdu/Hindi Voice Chatbot for Students</div>
+            <h1>Computer Basics for Kids</h1>
+            <div class="subtitle">Learn about computers in a fun way!</div>
+            <div class="robot-icon">🤖</div>
         </header>
         
         <div class="chat-container" id="chat-container">
             <div class="message bot-message">
-                السلام علیکم! میں آپ کا تعلیمی معاون ہوں۔ آپ اردو یا ہندی میں بول کر یا لکھ کر مجھ سے بات کر سکتے ہیں۔
-                <div class="message-time">ابھی</div>
+                <p>Hello! I'm Robo-Teacher! 👋</p>
+                <p>I can help you learn about computers, internet, WiFi, and more!</p>
+                <p>What would you like to know about?</p>
+                <div class="message-time">Just now</div>
             </div>
         </div>
         
+        <div class="suggestions" id="suggestions">
+            <div class="suggestion-chip" data-query="What is a computer?">What is a computer?</div>
+            <div class="suggestion-chip" data-query="What is the internet?">What is the internet?</div>
+            <div class="suggestion-chip" data-query="What is WiFi?">What is WiFi?</div>
+            <div class="suggestion-chip" data-query="What is 5G?">What is 5G?</div>
+        </div>
+        
         <div class="input-area">
-            <input type="text" id="user-input" placeholder="اپنا پیغام یہاں لکھیں...">
+            <input type="text" id="user-input" placeholder="Ask me about computers...">
             <button class="btn" id="send-btn">
                 <span class="icon">➤</span>
-            </button>
-            <button class="btn voice-btn" id="voice-btn">
-                <span class="icon">🎤</span>
             </button>
         </div>
     </div>
     
-    <div class="instructions">
-        <h2>استعمال کرنے کا طریقہ</h2>
-        <p>1. ٹیکسٹ باکس میں لکھ کر یا مائیکروفون بٹن دبا کر بول کر بات کریں</p>
-        <p>2. بوٹ آپ کے سوالوں کے جواب دے گا اور اردو/ہندی میں بھی بولے گا</p>
-        <p>3. یہ پروجیکٹ مکمل طور پر مفت APIs استعمال کرتا ہے اور آپ کے ڈیٹا کو محفوظ نہیں کرتا</p>
-    </div>
-    
     <footer>
-        اسکول کے طلباء کے لئے تعلیمی معاون چیٹ بوٹ | تمام حقوق محفوظ ہیں 2023
+        Computer Basics Chatbot for Kids • All data stays in your browser
     </footer>
 
     <script>
@@ -249,72 +297,103 @@
         const chatContainer = document.getElementById('chat-container');
         const userInput = document.getElementById('user-input');
         const sendBtn = document.getElementById('send-btn');
-        const voiceBtn = document.getElementById('voice-btn');
+        const suggestions = document.getElementById('suggestions');
         
-        // Speech Recognition (for voice input)
-        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-        let recognition;
-        
-        if (SpeechRecognition) {
-            recognition = new SpeechRecognition();
-            recognition.continuous = false;
-            recognition.interimResults = false;
-            recognition.lang = 'ur-PK'; // Urdu language code
-            
-            recognition.onstart = function() {
-                voiceBtn.classList.add('recording');
-                addMessage('آپ بول سکتے ہیں...', 'user');
-            };
-            
-            recognition.onresult = function(event) {
-                const transcript = event.results[0][0].transcript;
-                userInput.value = transcript;
-                processUserInput(transcript);
-                voiceBtn.classList.remove('recording');
-            };
-            
-            recognition.onerror = function(event) {
-                console.error('Speech recognition error', event.error);
-                voiceBtn.classList.remove('recording');
-                addMessage('آواز پہچاننے میں مسئلہ ہوا۔ براہ کرم دوبارہ کوشش کریں۔', 'bot');
-            };
-            
-            recognition.onend = function() {
-                voiceBtn.classList.remove('recording');
-            };
-        } else {
-            voiceBtn.disabled = true;
-            voiceBtn.title = 'آپ کے براؤزر میں وائس ریکگنیشن سپورٹ نہیں ہے';
-        }
+        // Computer knowledge database
+        const knowledgeBase = {
+            "computer": {
+                title: "What is a Computer?",
+                content: "A computer is an electronic machine that can store, process, and output information. It follows instructions called programs to do useful things like playing games, drawing pictures, or helping with homework.",
+                analogy: "Think of a computer like a super-smart helper that can remember lots of information and do tasks very quickly!",
+                image: "💻"
+            },
+            "laptop": {
+                title: "What is a Laptop?",
+                content: "A laptop is a portable computer that you can carry with you. It has a screen, keyboard, and trackpad all in one unit, and it runs on battery power so you can use it anywhere.",
+                analogy: "A laptop is like a computer that folded up into a neat package you can take to school, the park, or on trips!",
+                image: "💻"
+            },
+            "internet": {
+                title: "What is the Internet?",
+                content: "The internet is a huge network that connects computers all around the world. It lets people share information, send messages, watch videos, and visit websites.",
+                analogy: "The internet is like a giant digital city where computers can 'visit' each other and share information!",
+                image: "🌐"
+            },
+            "wifi": {
+                title: "What is WiFi?",
+                content: "WiFi is a technology that lets devices like computers, tablets, and phones connect to the internet without wires. It uses invisible radio waves to send information through the air.",
+                analogy: "WiFi is like an invisible bridge that connects your device to the internet without any cables!",
+                image: "📡"
+            },
+            "network": {
+                title: "What is a Network?",
+                content: "A network is when two or more computers are connected together so they can share information and resources. Your home WiFi creates a small network for all your family's devices.",
+                analogy: "A computer network is like a group of friends who can easily share toys and talk to each other!",
+                image: "🔗"
+            },
+            "5g": {
+                title: "What is 5G?",
+                content: "5G is the fifth generation of mobile network technology. It's very fast and lets phones and other devices connect to the internet more quickly than older technologies.",
+                analogy: "5G is like a super-fast highway for information that lets your phone download movies in seconds!",
+                image: "⚡"
+            },
+            "software": {
+                title: "What is Software?",
+                content: "Software is the set of instructions that tells a computer what to do. Apps, games, and programs are all examples of software.",
+                analogy: "If hardware is the computer's body, software is its brain - it tells the computer how to think and act!",
+                image: "🔄"
+            },
+            "hardware": {
+                title: "What is Hardware?",
+                content: "Hardware refers to the physical parts of a computer that you can touch, like the screen, keyboard, mouse, and the computer itself.",
+                analogy: "Hardware is like the bones and muscles of a computer - the physical parts that make it work!",
+                image: "🔧"
+            },
+            "password": {
+                title: "What is a Password?",
+                content: "A password is a secret word or phrase that you use to prove who you are when using a computer or website. It helps keep your information safe from others.",
+                analogy: "A password is like a special key that only you have to unlock your digital stuff!",
+                image: "🔒"
+            },
+            "browser": {
+                title: "What is a Web Browser?",
+                content: "A web browser is a program you use to visit websites on the internet. Chrome, Firefox, and Safari are all web browsers.",
+                analogy: "A web browser is like a magic window that lets you look at websites from all over the world!",
+                image: "🔍"
+            }
+        };
         
         // Event Listeners
-        sendBtn.addEventListener('click', () => {
+        sendBtn.addEventListener('click', sendMessage);
+        userInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendMessage();
+        });
+        
+        // Add event listeners to suggestion chips
+        document.querySelectorAll('.suggestion-chip').forEach(chip => {
+            chip.addEventListener('click', () => {
+                userInput.value = chip.getAttribute('data-query');
+                sendMessage();
+            });
+        });
+        
+        // Function to send message
+        function sendMessage() {
             const message = userInput.value.trim();
             if (message) {
-                processUserInput(message);
+                addMessage(message, 'user');
                 userInput.value = '';
-            }
-        });
-        
-        userInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                const message = userInput.value.trim();
-                if (message) {
+                
+                // Show typing indicator
+                showTypingIndicator();
+                
+                // Process after a short delay to simulate thinking
+                setTimeout(() => {
+                    removeTypingIndicator();
                     processUserInput(message);
-                    userInput.value = '';
-                }
+                }, 1500);
             }
-        });
-        
-        voiceBtn.addEventListener('click', () => {
-            if (recognition) {
-                try {
-                    recognition.start();
-                } catch (error) {
-                    console.error('Recognition start error:', error);
-                }
-            }
-        });
+        }
         
         // Function to add message to chat
         function addMessage(text, sender) {
@@ -322,7 +401,7 @@
             messageDiv.classList.add('message');
             messageDiv.classList.add(sender === 'user' ? 'user-message' : 'bot-message');
             
-            const time = new Date().toLocaleTimeString('ur-PK', { hour: '2-digit', minute: '2-digit' });
+            const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
             
             messageDiv.innerHTML = `
                 ${text}
@@ -333,155 +412,71 @@
             chatContainer.scrollTop = chatContainer.scrollHeight;
         }
         
-        // Function to process user input and generate bot response
-        function processUserInput(input) {
-            addMessage(input, 'user');
+        // Function to show typing indicator
+        function showTypingIndicator() {
+            const typingDiv = document.createElement('div');
+            typingDiv.classList.add('typing-indicator');
+            typingDiv.id = 'typing-indicator';
             
-            // Show typing indicator
-            const typingIndicator = document.createElement('div');
-            typingIndicator.classList.add('message', 'bot-message');
-            typingIndicator.id = 'typing-indicator';
-            typingIndicator.innerHTML = 'لکھ رہا ہوں...';
-            chatContainer.appendChild(typingIndicator);
+            typingDiv.innerHTML = `
+                <div class="typing-dots">
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                </div>
+            `;
+            
+            chatContainer.appendChild(typingDiv);
             chatContainer.scrollTop = chatContainer.scrollHeight;
-            
-            // Simulate API delay
-            setTimeout(() => {
-                document.getElementById('typing-indicator')?.remove();
-                
-                // Generate bot response
-                const response = generateBotResponse(input);
-                addMessage(response.text, 'bot');
-                
-                // Speak the response if text-to-speech is available
-                if (response.shouldSpeak) {
-                    speakText(response.text);
-                }
-            }, 1500);
         }
         
-        // Function to generate bot responses
-        function generateBotResponse(input) {
+        // Function to remove typing indicator
+        function removeTypingIndicator() {
+            const typingIndicator = document.getElementById('typing-indicator');
+            if (typingIndicator) {
+                typingIndicator.remove();
+            }
+        }
+        
+        // Function to process user input and generate response
+        function processUserInput(input) {
             const lowerInput = input.toLowerCase();
+            let response = null;
             
-            // Greetings
-            if (lowerInput.includes('سلام') || lowerInput.includes('ہیلو') || 
-                lowerInput.includes('ہائے') || lowerInput.includes('نمسکار')) {
-                return {
-                    text: 'وعلیکم السلام! آپ کیسے ہیں؟ آپ کس موضوع کے بارے میں پوچھنا چاہتے ہیں؟',
-                    shouldSpeak: true
-                };
-            }
-            
-            // Math questions
-            if (lowerInput.includes('ریاضی') || lowerInput.includes('میتھ') || 
-                lowerInput.includes('جمع') || lowerInput.includes('تفریق')) {
-                const responses = [
-                    'ریاضی ایک بہت اہم مضمون ہے۔ آپ جمع، تفریق، ضرب اور تقسیم کے بارے میں پوچھ سکتے ہیں۔',
-                    'کیا آپ کو ریاضی کے کسی خاص مسئلے میں مدد چاہیے؟',
-                    'ریاضی سیکھنے کے لئے مشق بہت ضروری ہے۔ روزانہ مسائل حل کریں۔'
-                ];
-                return {
-                    text: responses[Math.floor(Math.random() * responses.length)],
-                    shouldSpeak: true
-                };
-            }
-            
-            // Science questions
-            if (lowerInput.includes('سائنس') || lowerInput.includes('سائنسی') || 
-                lowerInput.includes('سائنسی') || lowerInput.includes('سائنس')) {
-                const responses = [
-                    'سائنس ہمارے ارد گرد کی دنیا کو سمجھنے کا طریقہ ہے۔ فزکس، کیمسٹری اور بائیالوجی اس کے اہم شاخیں ہیں۔',
-                    'سائنس کے تجربات بہت دلچسپ ہوتے ہیں۔ کیا آپ نے کوئی دلچسپ تجربہ کیا ہے؟',
-                    'سائنس کی مدد سے ہم نئی ایجادات کر سکتے ہیں جو انسانیت کی مدد کرتی ہیں۔'
-                ];
-                return {
-                    text: responses[Math.floor(Math.random() * responses.length)],
-                    shouldSpeak: true
-                };
-            }
-            
-            // Urdu/Hindi questions
-            if (lowerInput.includes('اردو') || lowerInput.includes('ہندی') || 
-                lowerInput.includes('زبان') || lowerInput.includes('قواعد')) {
-                const responses = [
-                    'اردو ایک خوبصورت زبان ہے جس کی شاعری اور ادب بہت مشہور ہے۔',
-                    'کیا آپ کو اردو قواعد یا گرامر کے بارے میں کوئی سوال ہے؟',
-                    'زبان سیکھنے کے لئے روزانہ پڑھنا اور لکھنا بہت ضروری ہے۔'
-                ];
-                return {
-                    text: responses[Math.floor(Math.random() * responses.length)],
-                    shouldSpeak: true
-                };
-            }
-            
-            // General knowledge
-            if (lowerInput.includes('جنرل نالج') || lowerInput.includes('عمومی علم') || 
-                lowerInput.includes('دنیا') || lowerInput.includes('معلومات')) {
-                const responses = [
-                    'دنیا کے بارے میں جاننا بہت ضروری ہے۔ آپ تاریخ، جغرافیہ یا موجودہ واقعات کے بارے میں پوچھ سکتے ہیں۔',
-                    'عمومی علم ہمارے ذہن کو وسیع کرتا ہے۔ روزانہ اخبار پڑھنے کی عادت ڈالیں۔',
-                    'کیا آپ کو کسی خاص موضوع کے بارے میں معلومات چاہیے؟'
-                ];
-                return {
-                    text: responses[Math.floor(Math.random() * responses.length)],
-                    shouldSpeak: true
-                };
-            }
-            
-            // Help
-            if (lowerInput.includes('مدد') || lowerInput.includes('ہیلپ') || 
-                lowerInput.includes('سکھاؤ') || lowerInput.includes('سکھا')) {
-                return {
-                    text: 'میں آپ کی تعلیمی مدد کے لئے یہاں ہوں۔ آپ ریاضی، سائنس، اردو، ہندی یا جنرل نالج کے بارے میں پوچھ سکتے ہیں۔',
-                    shouldSpeak: true
-                };
-            }
-            
-            // Default response
-            const defaultResponses = [
-                'میں ابھی سیکھ رہا ہوں۔ براہ کرم ریاضی، سائنس، اردو یا جنرل نالج کے بارے میں پوچھیں۔',
-                'معاف کیجئے، میں آپ کے سوال کا جواب نہیں دے سکتا۔ براہ کرم کسی تعلیمی موضوع کے بارے میں پوچھیں۔',
-                'کیا آپ کسی خاص مضمون کے بارے میں پوچھنا چاہتے ہیں؟'
-            ];
-            return {
-                text: defaultResponses[Math.floor(Math.random() * defaultResponses.length)],
-                shouldSpeak: true
-            };
-        }
-        
-        // Function to speak text using browser's text-to-speech
-        function speakText(text) {
-            if ('speechSynthesis' in window) {
-                const utterance = new SpeechSynthesisUtterance(text);
-                
-                // Try to set Urdu/Hindi voice if available
-                const voices = speechSynthesis.getVoices();
-                const urduVoice = voices.find(voice => 
-                    voice.lang.includes('ur') || voice.lang.includes('hi') || 
-                    voice.name.includes('Urdu') || voice.name.includes('Hindi')
-                );
-                
-                if (urduVoice) {
-                    utterance.voice = urduVoice;
-                } else {
-                    // Fallback to any available voice
-                    utterance.lang = 'ur-PK';
+            // Check for matches in knowledge base
+            for (const [key, value] of Object.entries(knowledgeBase)) {
+                if (lowerInput.includes(key)) {
+                    response = value;
+                    break;
                 }
-                
-                utterance.rate = 0.9;
-                utterance.pitch = 1;
-                
-                speechSynthesis.speak(utterance);
+            }
+            
+            if (response) {
+                // Create a formatted response
+                const responseText = `
+                    <strong>${response.image} ${response.title}</strong><br><br>
+                    ${response.content}<br><br>
+                    <em>${response.analogy}</em>
+                `;
+                addMessage(responseText, 'bot');
+            } else {
+                // Default response with suggestions
+                const defaultResponse = `
+                    I'm not sure I understand. Try asking me about:<br><br>
+                    • Computers and laptops<br>
+                    • Internet and WiFi<br>
+                    • Networks and 5G<br>
+                    • Software and hardware<br>
+                    • Passwords and browsers
+                `;
+                addMessage(defaultResponse, 'bot');
             }
         }
         
-        // Initialize voices when they are loaded
-        if ('speechSynthesis' in window) {
-            speechSynthesis.onvoiceschanged = () => {
-                // Voices are loaded
-            };
-        }
+        // Add some initial bot messages to demonstrate
+        setTimeout(() => {
+            addMessage("Try asking me 'What is a computer?' or click one of the buttons below!", 'bot');
+        }, 2000);
     </script>
 </body>
 </html>
